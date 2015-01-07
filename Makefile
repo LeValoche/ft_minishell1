@@ -7,7 +7,8 @@ LIB_TOTAL = $(addprefix $(LIB_PATH),$(LIB_NAME))
 SRC_PATH = ./src/
 SRC_NAME =	get_next_line.c\
 			main.c\
-			cmd_div.c
+			cmd_div.c\
+			path_worker.c
 
 OBJ_PATH = ./obj/
 OBJ_NAME = $(SRC_NAME:.c=.o)

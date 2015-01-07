@@ -12,47 +12,69 @@
 
 #include "ft_sh1.h"
 
-int			main(int ac, char **av)
+int			main(int ac, char **av, char **env)
 {
 	char	*input;
 
 	(void)ac;
+	if (!*env)
+		env = set_env();
 	input = NULL;
 	while (1)
 	{
-		ft_putstr(" $>");
+		ft_prompt(env);
 		get_next_line(1, &input);
-		what_to_do(ft_strsplit(input, ' '), av);
+		env = what_to_do(ft_strsplit(input, ' '), av, env);
 	}
 }
 
-void		what_to_do(char **split, char **av)
+char		**what_to_do(char **split, char **av, char **env)
 {
 	(void)av;
+	if (!*split)
+		return (NULL);
 	if (!ft_strcmp(split[0], "cd"))
-		cmd_cd(split);
+		cmd_cd(split, env);
 	else if (!ft_strcmp(split[0], "setenv"))
-		cmd_setenv(split);
+		env = cmd_setenv(env, split);
 	else if (!ft_strcmp(split[0], "unsetenv"))
 		cmd_unsetenv(split);
 	else if (!ft_strcmp(split[0], "env"))
-		cmd_env(split);
+		cmd_env(env);
 	else if (!ft_strcmp(split[0], "pwd"))
 		cmd_pwd();
 	else if (!ft_strcmp(split[0], "exit"))
 		exit(0);
 	else
 		cmd_div(split);
+	return (env);
 }
 
-char		*slash(char *str)
+void		ft_prompt(char **env)
 {
-	int		i;
+	char	buf[1024];
 
-	i = -1;
-	while (str[++i])
-		;
-	if (str[i - 1] != '/')
-		str = ft_strjoin(str, "/");
-	return (str);
+	getcwd(buf, sizeof(buf));
+	ft_putstr(GREEN);
+	ft_putstr("➜  ");
+	ft_putstr(BLUE);
+	if (!ft_strcmp(buf + 13, get_env_var(env, "HOME")))
+		ft_putstr("~");
+	else
+		ft_putstr(ft_strrchr(buf, '/') + 1);
+	ft_putstr(" ");
+	ft_putstr(COLOR_RESET);
+}
+
+char		**set_env()
+{
+	char	*ret;
+	char	*result;
+	int		fd;
+
+	fd = open("misc/env", O_RDONLY);
+	result = "";
+	while (get_next_line(fd, &ret) > 0)
+		result = ft_strjoin(result, ft_strjoin(ret, " "));
+	return (ft_strsplit(result, ' '));
 }

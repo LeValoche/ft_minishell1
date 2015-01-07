@@ -12,9 +12,27 @@
 
 #include "ft_sh1.h"
 
-void				cmd_cd(char **input)
+void				cmd_cd(char **input, char **env)
 {
-	chdir(input[1]);
+	struct stat		st;
+
+	if (!input[1])
+	{
+		chdir(get_env_var(env, "HOME"));
+		return ;
+	}
+	if (input[1][0] == '~')
+	{
+		input[1]++;
+		input[1] = ft_strjoin(get_env_var(env, "HOME"), input[1]);
+	}
+	if (stat(input[1], &st) == 0)
+		chdir(input[1]);
+	else
+	{
+		ft_putstr("cd: No such file or directory: ");
+		ft_putendl(input[1]);
+	}
 }
 
 void				cmd_pwd(void)
@@ -25,20 +43,29 @@ void				cmd_pwd(void)
 		ft_putendl(buf);
 }
 
-void				cmd_setenv(char **input)
+char				**cmd_setenv(char **env, char **input)
 {
-	(void)input;
+	int				i;
+
+	i = -1;
+	while (env[++i] && ft_strcmp(get_envar(env[i]), get_envar(input[1])))
+		;
+	if (!ft_strcmp(get_envar(env[i - 1]), get_envar(input[1])))
+		env[i + 1] = 0;
+	env[i] = ft_strdup(input[1]);
+	return (env);
 }
 
-void				cmd_unsetenv(char **input)
+void				cmd_unsetenv(char **env)
 {
-	(void)input;
+	
 }
 
 
-void				cmd_env(char **input)
+void				cmd_env(char **env)
 {
-	(void)input;
+	while (*env)
+		ft_putendl(*env++);
 }
 
 void				cmd_div(char **input)
