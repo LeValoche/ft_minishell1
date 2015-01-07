@@ -45,20 +45,13 @@ void				cmd_pwd(void)
 
 char				**cmd_setenv(char **env, char **input)
 {
-	int				i;
-
-	i = -1;
-	while (env[++i] && ft_strcmp(get_envar(env[i]), get_envar(input[1])))
-		;
-	if (!ft_strcmp(get_envar(env[i - 1]), get_envar(input[1])))
-		env[i + 1] = 0;
-	env[i] = ft_strdup(input[1]);
-	return (env);
+	(void)env;
+	(void)input;
 }
 
 void				cmd_unsetenv(char **env)
 {
-	
+	(void)env;
 }
 
 
@@ -68,7 +61,26 @@ void				cmd_env(char **env)
 		ft_putendl(*env++);
 }
 
-void				cmd_div(char **input)
+void				cmd_div(char **input, char **env)
 {
-	(void)input;
+	char			**paths;
+	char			*save;
+	int				i;
+	pid_t			pid;
+
+	paths = ft_strsplit(get_env_var(env, "PATH"), ':');
+	i = 0;
+	save = ft_strdup(input[0]);
+	input[0] = ft_strjoin(slash(paths[i]), input[0]);
+	pid = fork();
+	if (pid == 0)
+	{
+		while (paths[i] && execve(ft_strjoin(slash(paths[i]), save), input, env) == -1)
+		{
+			input[0] = ft_strjoin(slash(paths[i]), save);
+			i++;
+		}
+	}
+	else
+		wait(NULL);
 }

@@ -32,7 +32,7 @@ void				cmd_cd(char **input, char **env);
 char				**cmd_setenv(char **env, char **input);
 void				cmd_unsetenv(char **env);
 void				cmd_env(char **env);
-void				cmd_div(char **input);
+void				cmd_div(char **input, char **env);
 char				*slash(char *str);
 void				cmd_pwd(void);
 char				*get_home(char **env);
@@ -40,5 +40,7 @@ char				*get_env_var(char **env, char *var);
 void				ft_prompt(char **env);
 char				**set_env();
 char				*get_envar(char *env);
+char				**ft_realloc(char **env, char *toput, char *todel);
+int					ft_dbtablen(char **tab);
 
 #endif

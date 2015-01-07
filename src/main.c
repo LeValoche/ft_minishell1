@@ -46,7 +46,7 @@ char		**what_to_do(char **split, char **av, char **env)
 	else if (!ft_strcmp(split[0], "exit"))
 		exit(0);
 	else
-		cmd_div(split);
+		cmd_div(split, env);
 	return (env);
 }
 
