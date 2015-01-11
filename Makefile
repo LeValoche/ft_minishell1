@@ -14,7 +14,7 @@ SRC_NAME =	get_next_line.c\
 OBJ_PATH = ./obj/
 OBJ_NAME = $(SRC_NAME:.c=.o)
 
-NAME = ft_sh1
+NAME = ft_minishell1
 
 CC = gcc
 CFLAGS = -Wall -Wextra -Werror -g

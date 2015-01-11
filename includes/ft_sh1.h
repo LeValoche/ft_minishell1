@@ -17,6 +17,7 @@
 # include <stdlib.h>
 # include <sys/stat.h>
 # include <fcntl.h>
+# include <signal.h>
 # include "../libft/includes/libft.h"
 # include "get_next_line.h"
 # define RED    		"\x1b[31m"
@@ -30,7 +31,7 @@
 char				**what_to_do(char **split, char **av, char **env);
 void				cmd_cd(char **input, char **env);
 char				**cmd_setenv(char **env, char **input);
-void				cmd_unsetenv(char **env);
+char				**cmd_unsetenv(char **env, char **input);
 void				cmd_env(char **env);
 void				cmd_div(char **input, char **env);
 char				*slash(char *str);
@@ -40,7 +41,9 @@ char				*get_env_var(char **env, char *var);
 void				ft_prompt(char **env);
 char				**set_env();
 char				*get_envar(char *env);
-char				**ft_realloc(char **env, char *toput, char *todel);
 int					ft_dbtablen(char **tab);
+char				**ft_addrow(char **tab, char *str);
+char				**ft_delrow(char **tab, char *str);
+int					check_entry(char *input);
 
 #endif

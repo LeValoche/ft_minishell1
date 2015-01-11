@@ -24,8 +24,23 @@ int			main(int ac, char **av, char **env)
 	{
 		ft_prompt(env);
 		get_next_line(1, &input);
-		env = what_to_do(ft_strsplit(input, ' '), av, env);
+		if (check_entry(input))
+			env = what_to_do(ft_strsplit(input, ' '), av, env);
 	}
+}
+
+int			check_entry(char *input)
+{
+	if (ft_strlen(input) == 0)
+		ft_putstr_fd("ft_minishell1: You must write something.", 2);
+	else if (ft_strlen(input) > 1024)
+		ft_putstr_fd("ft_minishell1: Input so fat.", 2);
+	else if (!ft_isalpha(input[0]))
+		ft_putstr_fd("ft_minishell1: Please enter a command.", 2);
+	else
+		return (1);
+	ft_putendl("");
+	return (0);
 }
 
 char		**what_to_do(char **split, char **av, char **env)
@@ -38,7 +53,7 @@ char		**what_to_do(char **split, char **av, char **env)
 	else if (!ft_strcmp(split[0], "setenv"))
 		env = cmd_setenv(env, split);
 	else if (!ft_strcmp(split[0], "unsetenv"))
-		cmd_unsetenv(split);
+		env = cmd_unsetenv(env, split);
 	else if (!ft_strcmp(split[0], "env"))
 		cmd_env(env);
 	else if (!ft_strcmp(split[0], "pwd"))

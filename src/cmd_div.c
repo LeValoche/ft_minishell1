@@ -14,8 +14,6 @@
 
 void				cmd_cd(char **input, char **env)
 {
-	struct stat		st;
-
 	if (!input[1])
 	{
 		chdir(get_env_var(env, "HOME"));
@@ -26,13 +24,18 @@ void				cmd_cd(char **input, char **env)
 		input[1]++;
 		input[1] = ft_strjoin(get_env_var(env, "HOME"), input[1]);
 	}
-	if (stat(input[1], &st) == 0)
-		chdir(input[1]);
-	else
+	if (access(input[1], F_OK) == -1)
 	{
-		ft_putstr("cd: No such file or directory: ");
+		ft_putstr_fd("cd: No such file or directory: ", 2);
 		ft_putendl(input[1]);
 	}
+	else if (access(input[1], X_OK) == -1)
+	{
+		ft_putstr_fd("cd: Permission denied: ", 2);
+		ft_putendl(input[1]);
+	}
+	else
+		chdir(input[1]);
 }
 
 void				cmd_pwd(void)
@@ -45,13 +48,24 @@ void				cmd_pwd(void)
 
 char				**cmd_setenv(char **env, char **input)
 {
-	(void)env;
-	(void)input;
+	int				i;
+
+	i = 0;
+	while (env[i])
+	{
+		if (!ft_strcmp(get_envar(env[i]), get_envar(input[1])))
+		{
+			env[i] = ft_strdup(input[1]);
+			return (env);
+		}
+		i++;
+	}
+	return (ft_addrow(env, input[1]));
 }
 
-void				cmd_unsetenv(char **env)
+char				**cmd_unsetenv(char **env, char **input)
 {
-	(void)env;
+	return (ft_delrow(env, input[1]));
 }
 
 
@@ -69,18 +83,23 @@ void				cmd_div(char **input, char **env)
 	pid_t			pid;
 
 	paths = ft_strsplit(get_env_var(env, "PATH"), ':');
-	i = 0;
+	i = -1;
 	save = ft_strdup(input[0]);
-	input[0] = ft_strjoin(slash(paths[i]), input[0]);
+	input[0] = ft_strjoin(slash(paths[0]), input[0]);
 	pid = fork();
 	if (pid == 0)
 	{
-		while (paths[i] && execve(ft_strjoin(slash(paths[i]), save), input, env) == -1)
-		{
+		while (paths[++i] && execve(ft_strjoin(slash(paths[i]), save), input, env) == -1)
 			input[0] = ft_strjoin(slash(paths[i]), save);
-			i++;
+		if (!paths[i])
+		{
+			ft_putstr_fd("ft_minishell1: Command not found: ", 2);
+			ft_putendl(save);
 		}
 	}
 	else
-		wait(NULL);
+	{
+		waitpid(pid, NULL, 0);
+		kill(pid, SIGUSR1);
+	}
 }

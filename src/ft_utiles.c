@@ -22,12 +22,46 @@ int			ft_dbtablen(char **tab)
 	return (i);
 }
 
-char		**ft_valestgentils(char **blop, char *str)
+char		**ft_delrow(char **tab, char *str)
 {
+	char	**db;
 	int		i;
 
+	db = (char **)malloc(sizeof(char *) * ft_dbtablen(tab));
 	i = 0;
-	while (blop[i])
-		i++;
+	while (i < ft_dbtablen(tab) - 1)
+	{
+		if (!ft_strcmp(get_envar(tab[i]), str))
+		{
+			while (i < ft_dbtablen(tab) - 1)
+			{
+				db[i] = ft_strdup(tab[i + 1]);
+				i++;
+			}
+		}
+		else
+		{
+			db[i] = ft_strdup(tab[i]);
+			i++;
+		}
+	}
+	db[i] = 0;
+	return (db);
+}
 
+char		**ft_addrow(char **tab, char *str)
+{
+	char	**db;
+	int		i;
+
+	db = (char **)malloc(sizeof(char *) * ft_dbtablen(tab) + 2);
+	i = 0;
+	while (i < ft_dbtablen(tab))
+	{
+		db[i] = ft_strdup(tab[i]);
+		i++;
+	}
+	db[i] = ft_strdup(str);
+	db[i + 1] = 0;
+	return (db);
 }
