@@ -8,6 +8,7 @@ SRC =	src/ft_atoi.c\
 		src/ft_isascii.c\
 		src/ft_isdigit.c\
 		src/ft_isprint.c\
+		src/ft_isspace.c\
 		src/ft_memalloc.c\
 		src/ft_memccpy.c\
 		src/ft_strndup.c\

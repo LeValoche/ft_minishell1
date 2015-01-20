@@ -14,53 +14,49 @@
 
 void				cmd_cd(char **input, char **env)
 {
+	char			oldpwd[1024];
+
+	getcwd(oldpwd, sizeof(oldpwd));
+	ft_putendl(oldpwd);
 	if (!input[1])
 	{
-		chdir(get_env_var(env, "HOME"));
+		if (chdir(get_env_var(env, "HOME")) == -1)
+			ft_putendl_fd("cd: Don't find home directory.", 2);
+		cmd_setenv(env, ft_strjoin("OLDPWD=", oldpwd));
 		return ;
 	}
 	if (input[1][0] == '~')
 	{
 		input[1]++;
 		input[1] = ft_strjoin(get_env_var(env, "HOME"), input[1]);
+		cmd_setenv(env, ft_strjoin("OLDPWD=", oldpwd));
 	}
-	if (access(input[1], F_OK) == -1)
-	{
-		ft_putstr_fd("cd: No such file or directory: ", 2);
-		ft_putendl(input[1]);
-	}
+	if (ft_strequ(input[1], "-"))
+		chdir(get_env_var(env, "OLDPWD"));
+	else if (access(input[1], F_OK) == -1)
+		ft_puterror("cd: No such file or directory: ", input[1]);
 	else if (access(input[1], X_OK) == -1)
-	{
-		ft_putstr_fd("cd: Permission denied: ", 2);
-		ft_putendl(input[1]);
-	}
+		ft_puterror("cd: Permission denied: ", input[1]);
 	else
-		chdir(input[1]);
+		if (chdir(input[1]) == -1)
+			ft_puterror("cd: Don't work: ", input[1]);
 }
 
-void				cmd_pwd(void)
-{
-	char			buf[1024];
-
-	if (getcwd(buf, sizeof(buf)))
-		ft_putendl(buf);
-}
-
-char				**cmd_setenv(char **env, char **input)
+char				**cmd_setenv(char **env, char *input)
 {
 	int				i;
 
 	i = 0;
 	while (env[i])
 	{
-		if (!ft_strcmp(get_envar(env[i]), get_envar(input[1])))
+		if (!ft_strcmp(get_envar(env[i]), get_envar(input)))
 		{
-			env[i] = ft_strdup(input[1]);
+			env[i] = ft_strdup(input);
 			return (env);
 		}
 		i++;
 	}
-	return (ft_addrow(env, input[1]));
+	return (ft_addrow(env, input));
 }
 
 char				**cmd_unsetenv(char **env, char **input)
@@ -82,6 +78,8 @@ void				cmd_div(char **input, char **env)
 	int				i;
 	pid_t			pid;
 
+	if (!get_env_var(env, "PATH"))
+		return ;
 	paths = ft_strsplit(get_env_var(env, "PATH"), ':');
 	i = -1;
 	save = ft_strdup(input[0]);

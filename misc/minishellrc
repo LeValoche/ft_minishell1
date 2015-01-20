@@ -1,0 +1,19 @@
+##################################################
+#                                                #
+#                                                #
+#                  MiniShellRC                   #
+#                    vcohere                     #
+#                                                #
+##################################################
+
+# Here is the different variables available for configuration :
+# $DIRNAME
+# $
+#
+#
+
+
+# Set the prompt to whatever you want
+PROMPT=$DIRNAME $->
+
+

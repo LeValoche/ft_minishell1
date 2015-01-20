@@ -15,7 +15,7 @@
 int			main(int ac, char **av, char **env)
 {
 	char	*input;
-
+	
 	(void)ac;
 	if (!*env)
 		env = set_env();
@@ -24,6 +24,7 @@ int			main(int ac, char **av, char **env)
 	{
 		ft_prompt(env);
 		get_next_line(1, &input);
+		input = ft_strtrim(input);
 		if (check_entry(input))
 			env = what_to_do(ft_strsplit(input, ' '), av, env);
 	}
@@ -51,13 +52,11 @@ char		**what_to_do(char **split, char **av, char **env)
 	if (!ft_strcmp(split[0], "cd"))
 		cmd_cd(split, env);
 	else if (!ft_strcmp(split[0], "setenv"))
-		env = cmd_setenv(env, split);
+		env = cmd_setenv(env, split[1]);
 	else if (!ft_strcmp(split[0], "unsetenv"))
 		env = cmd_unsetenv(env, split);
 	else if (!ft_strcmp(split[0], "env"))
 		cmd_env(env);
-	else if (!ft_strcmp(split[0], "pwd"))
-		cmd_pwd();
 	else if (!ft_strcmp(split[0], "exit"))
 		exit(0);
 	else
@@ -81,7 +80,7 @@ void		ft_prompt(char **env)
 	ft_putstr(COLOR_RESET);
 }
 
-char		**set_env()
+char		**set_env(void)
 {
 	char	*ret;
 	char	*result;

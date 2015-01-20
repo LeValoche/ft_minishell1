@@ -65,3 +65,9 @@ char		**ft_addrow(char **tab, char *str)
 	db[i + 1] = 0;
 	return (db);
 }
+
+void		ft_puterror(char *s1, char *s2)
+{
+	ft_putstr_fd(s1, 2);
+	ft_putendl_fd(s2, 2);
+}
