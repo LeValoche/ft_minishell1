@@ -47,5 +47,6 @@ char				**ft_delrow(char **tab, char *str);
 int					check_entry(char *input);
 void				ft_puterror(char *s1, char *s2);
 void				cmd_exec(char **input, char **env);
+char				*ft_strtoup(char *str);
 
 #endif

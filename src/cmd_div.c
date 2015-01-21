@@ -59,12 +59,12 @@ char				**cmd_setenv(char **env, char *input)
 
 char				**cmd_unsetenv(char **env, char **input)
 {
-	if (!get_env_var(env, input[1]))
+	if (!get_env_var(env, ft_strtoup(input[1])))
 	{
 		ft_puterror("ft_minishell1: Variable not found: ", input[1]);
 		return (env);
 	}
-	return (ft_delrow(env, input[1]));
+	return (ft_delrow(env, ft_strtoup(input[1])));
 }
 
 void				cmd_env(char **env)
