@@ -17,11 +17,10 @@ void				cmd_cd(char **input, char **env)
 	char			oldpwd[1024];
 
 	getcwd(oldpwd, sizeof(oldpwd));
-	ft_putendl(oldpwd);
 	if (!input[1])
 	{
 		if (chdir(get_env_var(env, "HOME")) == -1)
-			ft_putendl_fd("cd: Don't find home directory.", 2);
+			ft_puterror("cd: Don't find home directory.", "");
 		cmd_setenv(env, ft_strjoin("OLDPWD=", oldpwd));
 		return ;
 	}
@@ -37,9 +36,8 @@ void				cmd_cd(char **input, char **env)
 		ft_puterror("cd: No such file or directory: ", input[1]);
 	else if (access(input[1], X_OK) == -1)
 		ft_puterror("cd: Permission denied: ", input[1]);
-	else
-		if (chdir(input[1]) == -1)
-			ft_puterror("cd: Don't work: ", input[1]);
+	else if (chdir(input[1]) == -1)
+		ft_puterror("cd: Don't work: ", input[1]);
 }
 
 char				**cmd_setenv(char **env, char *input)
@@ -64,7 +62,6 @@ char				**cmd_unsetenv(char **env, char **input)
 	return (ft_delrow(env, input[1]));
 }
 
-
 void				cmd_env(char **env)
 {
 	while (*env)
@@ -87,13 +84,11 @@ void				cmd_div(char **input, char **env)
 	pid = fork();
 	if (pid == 0)
 	{
-		while (paths[++i] && execve(ft_strjoin(slash(paths[i]), save), input, env) == -1)
+		while (paths[++i] && execve(ft_strjoin(slash(paths[i]), save),
+			input, env) == -1)
 			input[0] = ft_strjoin(slash(paths[i]), save);
 		if (!paths[i])
-		{
-			ft_putstr_fd("ft_minishell1: Command not found: ", 2);
-			ft_putendl(save);
-		}
+			ft_puterror("ft_minishell1: Command not found: ", save);
 	}
 	else
 	{

@@ -12,83 +12,95 @@
 
 #include "ft_sh1.h"
 
-int			main(int ac, char **av, char **env)
-{
-	char	*input;
-	
-	(void)ac;
-	if (!*env)
-		env = set_env();
-	input = NULL;
-	while (1)
-	{
-		ft_prompt(env);
-		get_next_line(1, &input);
-		input = ft_strtrim(input);
-		if (check_entry(input))
-			env = what_to_do(ft_strsplit(input, ' '), av, env);
-	}
-}
-
-int			check_entry(char *input)
+int				check_entry(char *input)
 {
 	if (ft_strlen(input) == 0)
-		ft_putstr_fd("ft_minishell1: You must write something.", 2);
+		ft_puterror("ft_minishell1: You must write something.", "");
 	else if (ft_strlen(input) > 1024)
-		ft_putstr_fd("ft_minishell1: Input so fat.", 2);
-	else if (!ft_isalpha(input[0]))
-		ft_putstr_fd("ft_minishell1: Please enter a command.", 2);
+		ft_puterror("ft_minishell1: Input so fat.", "");
+	else if (!ft_isalpha(input[0]) && input[0] != '.')
+		ft_puterror("ft_minishell1: Please enter a command.", "");
 	else
 		return (1);
-	ft_putendl("");
 	return (0);
 }
 
-char		**what_to_do(char **split, char **av, char **env)
+char			**what_to_do(char **split, char **av, char **env)
 {
 	(void)av;
 	if (!*split)
 		return (NULL);
-	if (!ft_strcmp(split[0], "cd"))
+	if (ft_strequ(split[0], "cd"))
 		cmd_cd(split, env);
-	else if (!ft_strcmp(split[0], "setenv"))
+	else if (ft_strequ(split[0], "setenv"))
 		env = cmd_setenv(env, split[1]);
-	else if (!ft_strcmp(split[0], "unsetenv"))
+	else if (ft_strequ(split[0], "unsetenv"))
 		env = cmd_unsetenv(env, split);
-	else if (!ft_strcmp(split[0], "env"))
+	else if (ft_strequ(split[0], "env"))
 		cmd_env(env);
-	else if (!ft_strcmp(split[0], "exit"))
+	else if (ft_strequ(split[0], "exit"))
 		exit(0);
+	else if (ft_strnequ(split[0], "./", 2))
+		cmd_exec(split, env);
 	else
 		cmd_div(split, env);
 	return (env);
 }
 
-void		ft_prompt(char **env)
+void			ft_prompt(char **env, int e)
 {
-	char	buf[1024];
+	char		buf[1024];
+	static int	error;
 
+	if (e)
+	{
+		error = 1;
+		return ;
+	}
 	getcwd(buf, sizeof(buf));
-	ft_putstr(GREEN);
-	ft_putstr("➜  ");
+	if (error)
+		ft_putstr(ft_strjoin(RED, "X_X "));
+	else
+		ft_putstr(ft_strjoin(GREEN, "^_^ "));
+	ft_putstr(COLOR_RESET);
+	ft_putchar('[');
 	ft_putstr(BLUE);
 	if (!ft_strcmp(buf + 13, get_env_var(env, "HOME")))
 		ft_putstr("~");
 	else
 		ft_putstr(ft_strrchr(buf, '/') + 1);
-	ft_putstr(" ");
 	ft_putstr(COLOR_RESET);
+	ft_putstr("] ");
+	error = 0;
 }
 
-char		**set_env(void)
+char			**set_env(void)
 {
-	char	*ret;
-	char	*result;
-	int		fd;
+	char		*ret;
+	char		*result;
+	int			fd;
 
 	fd = open("misc/env", O_RDONLY);
 	result = "";
 	while (get_next_line(fd, &ret) > 0)
 		result = ft_strjoin(result, ft_strjoin(ret, " "));
 	return (ft_strsplit(result, ' '));
+}
+
+int				main(int ac, char **av, char **env)
+{
+	char		*input;
+
+	(void)ac;
+	if (!*env)
+		env = set_env();
+	input = NULL;
+	while (1)
+	{
+		ft_prompt(env, 0);
+		get_next_line(1, &input);
+		input = ft_strtrim(input);
+		if (check_entry(input))
+			env = what_to_do(ft_strsplit(input, ' '), av, env);
+	}
 }

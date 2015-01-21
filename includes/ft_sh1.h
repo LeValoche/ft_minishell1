@@ -38,7 +38,7 @@ char				*slash(char *str);
 void				cmd_pwd(void);
 char				*get_home(char **env);
 char				*get_env_var(char **env, char *var);
-void				ft_prompt(char **env);
+void				ft_prompt(char **env, int e);
 char				**set_env(void);
 char				*get_envar(char *env);
 int					ft_dbtablen(char **tab);
@@ -46,5 +46,6 @@ char				**ft_addrow(char **tab, char *str);
 char				**ft_delrow(char **tab, char *str);
 int					check_entry(char *input);
 void				ft_puterror(char *s1, char *s2);
+void				cmd_exec(char **input, char **env);
 
 #endif

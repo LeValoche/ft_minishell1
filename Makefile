@@ -9,7 +9,8 @@ SRC_NAME =	get_next_line.c\
 			main.c\
 			cmd_div.c\
 			path_worker.c\
-			ft_utiles.c
+			ft_utiles.c\
+			ft_misc.c
 
 OBJ_PATH = ./obj/
 OBJ_NAME = $(SRC_NAME:.c=.o)
