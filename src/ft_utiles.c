@@ -31,7 +31,7 @@ char		**ft_delrow(char **tab, char *str)
 	i = 0;
 	while (i < ft_dbtablen(tab) - 1)
 	{
-		if (!ft_strcmp(get_envar(tab[i]), str))
+		if (ft_strequ(get_envar(tab[i]), str))
 		{
 			while (i < ft_dbtablen(tab) - 1)
 			{
