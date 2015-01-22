@@ -14,12 +14,12 @@
 
 int				check_entry(char *input)
 {
-	if (ft_strlen(input) == 0)
-		ft_puterror("ft_minishell1: You must write something.", "");
+	if (!ft_isalpha(input[0]) && !ft_strnequ(input, "./", 2))
+		ft_puterror("ft_minishell1: Please enter a command.", "");
 	else if (ft_strlen(input) > 1024)
 		ft_puterror("ft_minishell1: Input so fat.", "");
-	else if (!ft_isalpha(input[0]) && input[0] != '.')
-		ft_puterror("ft_minishell1: Please enter a command.", "");
+	else if (ft_strlen(input) == 0)
+		ft_puterror("ft_minishell1: You must write something.", "");
 	else
 		return (1);
 	return (0);

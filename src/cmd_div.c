@@ -45,6 +45,11 @@ char				**cmd_setenv(char **env, char *input)
 	int				i;
 
 	i = 0;
+	if (ft_strrchr(input, '=') == NULL)
+	{
+		ft_puterror("ft_minishell1: The variable need a value: ", input);
+		return (env);
+	}
 	while (env[i])
 	{
 		if (!ft_strcmp(get_envar(env[i]), get_envar(input)))

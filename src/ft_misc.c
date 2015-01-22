@@ -48,3 +48,8 @@ char		*ft_strtoup(char *str)
 	}
 	return (str);
 }
+
+void		signal_handler(void)
+{
+	
+}
