@@ -12,9 +12,9 @@
 
 #include "ft_sh1.h"
 
-void		cmd_exec(char **input, char **env)
+void				cmd_exec(char **input, char **env)
 {
-	pid_t	pid;
+	pid_t			pid;
 
 	*input += 2;
 	if (access(input[0], F_OK) == -1)
@@ -35,9 +35,9 @@ void		cmd_exec(char **input, char **env)
 	}
 }
 
-char		*ft_strtoup(char *str)
+char				*ft_strtoup(char *str)
 {
-	int		i;
+	int				i;
 
 	i = 0;
 	while (str[i])
@@ -49,7 +49,28 @@ char		*ft_strtoup(char *str)
 	return (str);
 }
 
-void		signal_handler(void)
+void				signal_handler(int sign)
 {
-	
+	(void)sign;
+	if (sign == SIGINT)
+		kill(0, SIGINT);
+}
+
+void				start_termios(void)
+{
+	struct termios	attributes;
+	int				fd;
+
+	fd = STDIN_FILENO;
+	if (!isatty(fd))
+		exit (1);
+	if (tcdrain(fd) == -1 || tcgetattr(fd, &attributes) == -1)
+		exit (-1);
+	attributes.c_lflag &= ~ICANON;
+	attributes.c_lflag &= ~(ECHOK | ECHO | ECHONL | ECHOE | IEXTEN);
+	attributes.c_cc[VMIN] = 1;
+	attributes.c_cc[VTIME] = 0;
+	if (tcsetattr(fd, TCSADRAIN, &attributes) == -1)
+		exit(-1);
+	return ;
 }

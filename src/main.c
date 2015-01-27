@@ -39,7 +39,7 @@ char			**what_to_do(char **split, char **av, char **env)
 	else if (ft_strequ(split[0], "env"))
 		cmd_env(env);
 	else if (ft_strequ(split[0], "exit"))
-		exit(0);
+		kill(0, SIGTERM);
 	else if (ft_strnequ(split[0], "./", 2))
 		cmd_exec(split, env);
 	else
@@ -76,14 +76,16 @@ void			ft_prompt(char **env, int e)
 
 char			**set_env(void)
 {
-	char		*ret;
+	//char		*ret;
 	char		*result;
-	int			fd;
+	//int			fd;
 
-	fd = open("misc/env", O_RDONLY);
+			//NORME FUCKER
+
+	//fd = open("misc/env", O_RDONLY);
 	result = "";
-	while (get_next_line(fd, &ret) > 0)
-		result = ft_strjoin(result, ft_strjoin(ret, " "));
+	//while (ret = get_next_line(0, &ret))
+	//	result = ft_strjoin(result, ft_strjoin(ret, " "));
 	return (ft_strsplit(result, ' '));
 }
 
@@ -92,13 +94,14 @@ int				main(int ac, char **av, char **env)
 	char		*input;
 
 	(void)ac;
+	start_termios();
 	if (!*env)
 		env = set_env();
-	input = NULL;
+	signal(SIGINT, signal_handler);
 	while (1)
 	{
 		ft_prompt(env, 0);
-		get_next_line(1, &input);
+		input = get_next_line(1, env, 0);
 		input = ft_strtrim(input);
 		if (check_entry(input))
 			env = what_to_do(ft_strsplit(input, ' '), av, env);

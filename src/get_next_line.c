@@ -5,92 +5,65 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: vcohere <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2015/01/06 05:00:38 by vcohere           #+#    #+#             */
-/*   Updated: 2015/01/06 05:00:50 by vcohere          ###   ########.fr       */
+/*   Created: 2014/11/29 00:56:15 by vcohere           #+#    #+#             */
+/*   Updated: 2015/01/27 11:48:17 by vcohere          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../libft/includes/libft.h"
-#include "../includes/get_next_line.h"
+#include "ft_sh1.h"
+#define FUCK {ft_putchar(c); dest[i] = c; i++;}
+#define BUFF_SIZE 1024
+#define PROMPT {ft_putstr("\033[2J\033[1;1H"); ft_prompt(env, 0);}
 
-static int			ft_find_nl(char *str)
+char			ft_getc(int fd)
 {
-	int				i;
+	char		b[1];
+	int			ret;
+
+	ret = read(fd, b, 1);
+	if (ret == 0)
+		return (0);
+	if (ret < 0)
+		return (-1);
+	else
+		return (*b);
+}
+
+int				backspace(char **env, int ret, int i, char **dest)
+{
+	ft_putstr("\033[2K\r");
+	ft_prompt(env, ret);
+	if (ft_strlen(*dest) > 0)
+	{
+		(*dest)[i - 1] = '\0';
+		i -= 1;
+		ft_putstr(*dest);
+	}
+	return (i);
+}
+
+char			*get_next_line(int fd, char **env, int ret)
+{
+	char		*dest;
+	int			c;
+	int			i;
 
 	i = 0;
-	while (str[i])
+	dest = malloc(sizeof(char) * BUFF_SIZE);
+	while ((c = ft_getc(fd)) != 0 && c != '\n' && i < BUFF_SIZE - 1)
 	{
-		if (str[i] == '\n')
-			return (i);
-		i++;
-	}
-	return (-1);
-}
-
-static char			*ft_split_nl(char *acc)
-{
-	char			*str;
-	int				i;
-	int				size;
-
-	i = ft_find_nl(acc);
-	str = malloc(i + 1);
-	ft_strncpy(str, acc, i);
-	str[i] = 0;
-	size = ft_strlen(acc) - i;
-	ft_memmove(acc, acc + i + 1, size);
-	acc[size] = 0;
-	return (str);
-}
-
-static int			get_next_line2(char **acc, char *tmp, int fd, char **line)
-{
-	ssize_t			size;
-	char			buffer[BUFF_SIZE + 1];
-
-	while (ft_find_nl(*acc) == -1)
-	{
-		size = read(fd, buffer, BUFF_SIZE);
-		if (size == 0)
+		if (c == 4)
+			exit(0);
+		else if (c == 127)
+			i = backspace(env, ret, i, &dest);
+		else if (c == 12)
 		{
-			if (**acc == 0)
-			{
-				free(*acc);
-				*acc = NULL;
-				return (0);
-			}
-			*line = ft_strdup(*acc);
-			**acc = 0;
-			return (1);
+			PROMPT;
 		}
-		tmp = (char*)malloc(sizeof(char) * (ft_strlen(*acc) + size + 1));
-		buffer[size] = '\0';
-		ft_strcat(ft_strcpy(tmp, *acc), buffer);
-		free(*acc);
-		*acc = tmp;
+		else
+			FUCK;
 	}
-	return (-1);
-}
-
-int					get_next_line(int const fd, char **line)
-{
-	static char		*acc;
-	int				ret;
-	char			*tmp;
-
-	tmp = 0;
-	if (fd < 0)
-		return (-1);
-	if (acc == NULL)
-	{
-		acc = malloc(1);
-		*acc = 0;
-	}
-	ret = get_next_line2(&acc, tmp, fd, line);
-	if (ret == -1)
-	{
-		*line = ft_split_nl(acc);
-		return (1);
-	}
-	return (ret);
+	ft_putendl("");
+	dest[i] = '\0';
+	return (ft_strdup(dest));
 }
