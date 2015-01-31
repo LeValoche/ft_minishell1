@@ -14,8 +14,6 @@
 
 void				cmd_exec(char **input, char **env)
 {
-	pid_t			pid;
-
 	*input += 2;
 	if (access(input[0], F_OK) == -1)
 		ft_puterror("ft_minishell1: No such file or directory: ", input[0]);
@@ -35,6 +33,19 @@ void				cmd_exec(char **input, char **env)
 	}
 }
 
+void				cmd_exit(char **input)
+{
+	int				i;
+
+	i = 0;
+	while (input[i])
+		i++;
+	if (i <= 1)
+		exit(0);
+	if (i == 2)
+		exit(ft_atoi(input[1]));
+}
+
 char				*ft_strtoup(char *str)
 {
 	int				i;
@@ -49,28 +60,29 @@ char				*ft_strtoup(char *str)
 	return (str);
 }
 
-void				signal_handler(int sign)
+char				*replace(char *str)
 {
-	(void)sign;
-	if (sign == SIGINT)
-		kill(0, SIGINT);
+	int				i;
+
+	i = -1;
+	while (str[++i])
+	{
+		if (str[i] == '\t')
+			str[i] = ' ';
+	}
+	return (str);
 }
 
-void				start_termios(void)
+char				**cut_str(char *input)
 {
-	struct termios	attributes;
-	int				fd;
+	int				i;
+	char			**res;
 
-	fd = STDIN_FILENO;
-	if (!isatty(fd))
-		exit (1);
-	if (tcdrain(fd) == -1 || tcgetattr(fd, &attributes) == -1)
-		exit (-1);
-	attributes.c_lflag &= ~ICANON;
-	attributes.c_lflag &= ~(ECHOK | ECHO | ECHONL | ECHOE | IEXTEN);
-	attributes.c_cc[VMIN] = 1;
-	attributes.c_cc[VTIME] = 0;
-	if (tcsetattr(fd, TCSADRAIN, &attributes) == -1)
-		exit(-1);
-	return ;
+	i = -1;
+	res = ft_strsplit(replace(input), ' ');
+	while (res[++i])
+	{
+		res[i] = ft_strtrim(res[i]);
+	}
+	return (res);
 }

@@ -5,8 +5,8 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: vcohere <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2015/01/06 05:01:01 by vcohere           #+#    #+#             */
-/*   Updated: 2015/01/06 05:01:04 by vcohere          ###   ########.fr       */
+/*   Created: 2014/11/29 00:52:51 by vcohere           #+#    #+#             */
+/*   Updated: 2014/12/17 03:21:23 by vcohere          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 # define GET_NEXT_LINE_H
 
 # define BUFF_SIZE 32
+# include "../libft/includes/libft.h"
 # include <unistd.h>
 # include <fcntl.h>
 # include <string.h>

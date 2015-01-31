@@ -15,7 +15,7 @@
 int				check_entry(char *input)
 {
 	if (!ft_isalpha(input[0]) && !ft_strnequ(input, "./", 2))
-		ft_puterror("ft_minishell1: Please enter a command.", "");
+		return (0);
 	else if (ft_strlen(input) > 1024)
 		ft_puterror("ft_minishell1: Input so fat.", "");
 	else if (ft_strlen(input) == 0)
@@ -39,7 +39,7 @@ char			**what_to_do(char **split, char **av, char **env)
 	else if (ft_strequ(split[0], "env"))
 		cmd_env(env);
 	else if (ft_strequ(split[0], "exit"))
-		kill(0, SIGTERM);
+		cmd_exit(split);
 	else if (ft_strnequ(split[0], "./", 2))
 		cmd_exec(split, env);
 	else
@@ -47,7 +47,7 @@ char			**what_to_do(char **split, char **av, char **env)
 	return (env);
 }
 
-void			ft_prompt(char **env, int e)
+void			ft_prompt(int e)
 {
 	char		buf[1024];
 	static int	error;
@@ -65,10 +65,7 @@ void			ft_prompt(char **env, int e)
 	ft_putstr(COLOR_RESET);
 	ft_putchar('[');
 	ft_putstr(BLUE);
-	if (!ft_strcmp(buf + 13, get_env_var(env, "HOME")))
-		ft_putstr("~");
-	else
-		ft_putstr(ft_strrchr(buf, '/') + 1);
+	ft_putstr(ft_strrchr(buf, '/') + 1);
 	ft_putstr(COLOR_RESET);
 	ft_putstr("] ");
 	error = 0;
@@ -76,16 +73,14 @@ void			ft_prompt(char **env, int e)
 
 char			**set_env(void)
 {
-	//char		*ret;
+	char		*ret;
 	char		*result;
-	//int			fd;
+	int			fd;
 
-			//NORME FUCKER
-
-	//fd = open("misc/env", O_RDONLY);
+	fd = open("misc/env", O_RDONLY);
 	result = "";
-	//while (ret = get_next_line(0, &ret))
-	//	result = ft_strjoin(result, ft_strjoin(ret, " "));
+	while ((ret = get_next_line(fd, &ret)))
+		result = ft_strjoin(result, ft_strjoin(ret, " "));
 	return (ft_strsplit(result, ' '));
 }
 
@@ -94,16 +89,14 @@ int				main(int ac, char **av, char **env)
 	char		*input;
 
 	(void)ac;
-	start_termios();
 	if (!*env)
 		env = set_env();
-	signal(SIGINT, signal_handler);
+	input = NULL;
 	while (1)
 	{
-		ft_prompt(env, 0);
-		input = get_next_line(1, env, 0);
-		input = ft_strtrim(input);
-		if (check_entry(input))
-			env = what_to_do(ft_strsplit(input, ' '), av, env);
+		ft_prompt(0);
+		get_next_line(0, &input);
+		if (check_entry(ft_strtrim(input)))
+			env = what_to_do(cut_str(input), av, env);
 	}
 }

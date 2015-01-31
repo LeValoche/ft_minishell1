@@ -83,7 +83,6 @@ void				cmd_div(char **input, char **env)
 	char			**paths;
 	char			*save;
 	int				i;
-	pid_t			pid;
 
 	if (!get_env_var(env, "PATH"))
 		return ;
