@@ -23,8 +23,11 @@ void				cmd_exec(char **input, char **env)
 		pid = fork();
 	if (pid == 0)
 	{
-		if ((execve(input[0], input + 1, env)) == -1)
-			ft_puterror("ft_minishell1: Poney error: ", input[0]);
+		if ((execve(input[0], input + 1, env)) == -1 && 
+			access(input[0], F_OK) == 0)
+		{
+			ft_puterror("ft_minishell1: Not executable: ", input[0]);
+		}
 	}
 	else
 	{

@@ -96,7 +96,10 @@ int				main(int ac, char **av, char **env)
 	{
 		ft_prompt(0);
 		get_next_line(0, &input);
-		if (check_entry(ft_strtrim(input)))
+		if ((input[0] == ' ' || input[0] == '\t')
+			&& ft_strlen(input) == 1)
+			ft_putstr("");
+		else if (check_entry(ft_strtrim(input)))
 			env = what_to_do(cut_str(input), av, env);
 	}
 }
