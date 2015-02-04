@@ -25,9 +25,8 @@ int				check_entry(char *input)
 	return (0);
 }
 
-char			**what_to_do(char **split, char **av, char **env)
+char			**what_to_do(char **split, char **env)
 {
-	(void)av;
 	if (!*split)
 		return (NULL);
 	if (ft_strequ(split[0], "cd"))
@@ -79,8 +78,11 @@ char			**set_env(void)
 
 	fd = open("misc/env", O_RDONLY);
 	result = "";
-	while ((ret = get_next_line(fd, &ret)))
+	while (get_next_line(fd, &ret))
+	{
+		ft_putendl(ret);
 		result = ft_strjoin(result, ft_strjoin(ret, " "));
+	}
 	return (ft_strsplit(result, ' '));
 }
 
@@ -89,6 +91,7 @@ int				main(int ac, char **av, char **env)
 	char		*input;
 
 	(void)ac;
+	(void)av;
 	if (!*env)
 		env = set_env();
 	input = NULL;
@@ -96,10 +99,9 @@ int				main(int ac, char **av, char **env)
 	{
 		ft_prompt(0);
 		get_next_line(0, &input);
-		if ((input[0] == ' ' || input[0] == '\t')
-			&& ft_strlen(input) == 1)
+		if (unvalid_entry(input))
 			ft_putstr("");
 		else if (check_entry(ft_strtrim(input)))
-			env = what_to_do(cut_str(input), av, env);
+			env = what_to_do(cut_str(input), env);
 	}
 }

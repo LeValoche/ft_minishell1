@@ -30,7 +30,7 @@
 pid_t				pid;
 
 char				*get_next_line(int fd, char **line);
-char				**what_to_do(char **split, char **av, char **env);
+char				**what_to_do(char **split, char **env);
 void				cmd_cd(char **input, char **env);
 char				**cmd_setenv(char **env, char *input);
 char				**cmd_unsetenv(char **env, char **input);
@@ -53,5 +53,6 @@ void				cmd_exec(char **input, char **env);
 char				*ft_strtoup(char *str);
 char				*replace(char *str);
 char				**cut_str(char *input);
+int					unvalid_entry(char *str);
 
 #endif

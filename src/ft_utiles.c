@@ -72,3 +72,16 @@ void		ft_puterror(char *s1, char *s2)
 	ft_putendl_fd(s2, 2);
 	ft_prompt(1);
 }
+
+int			unvalid_entry(char *str)
+{
+	int		i;
+
+	i = -1;
+	while (str[++i])
+	{
+		if (str[i] != ' ' && str[i] != '\t')
+			return (0);
+	}
+	return (1);
+}
