@@ -14,7 +14,11 @@
 
 void				cmd_exec(char **input, char **env)
 {
-	*input += 2;
+	if (ft_strnequ(input[0], "./", 2))
+	{
+		ft_putendl("yolo");
+		*input += 2;
+	}
 	if (access(input[0], F_OK) == -1)
 		ft_puterror("ft_minishell1: No such file or directory: ", input[0]);
 	else if (access(input[0], X_OK) == -1)
@@ -23,11 +27,9 @@ void				cmd_exec(char **input, char **env)
 		pid = fork();
 	if (pid == 0)
 	{
-		if ((execve(input[0], input + 1, env)) == -1 && 
+		if ((execve(input[0], input, env)) == -1 && 
 			access(input[0], F_OK) == 0)
-		{
 			ft_puterror("ft_minishell1: Not executable: ", input[0]);
-		}
 	}
 	else
 	{
@@ -47,6 +49,7 @@ void				cmd_exit(char **input)
 		exit(0);
 	if (i == 2)
 		exit(ft_atoi(input[1]));
+	ft_puterror("exit: Too much arguments.", "");
 }
 
 char				*ft_strtoup(char *str)

@@ -14,7 +14,9 @@
 
 int				check_entry(char *input)
 {
-	if (!ft_isalpha(input[0]) && !ft_strnequ(input, "./", 2))
+	ft_putendl(input);
+	FAIRE MARCHER LE ./
+	if (!ft_isalpha(input[0]) && !ft_strchr(input, '/'))
 		return (0);
 	else if (ft_strlen(input) > 1024)
 		ft_puterror("ft_minishell1: Input so fat.", "");
@@ -39,7 +41,7 @@ char			**what_to_do(char **split, char **env)
 		cmd_env(env);
 	else if (ft_strequ(split[0], "exit"))
 		cmd_exit(split);
-	else if (ft_strnequ(split[0], "./", 2))
+	else if (ft_strchr(split[0], '/'))
 		cmd_exec(split, env);
 	else
 		cmd_div(split, env);
