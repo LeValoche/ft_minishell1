@@ -15,10 +15,7 @@
 void				cmd_exec(char **input, char **env)
 {
 	if (ft_strnequ(input[0], "./", 2))
-	{
-		ft_putendl("yolo");
 		*input += 2;
-	}
 	if (access(input[0], F_OK) == -1)
 		ft_puterror("ft_minishell1: No such file or directory: ", input[0]);
 	else if (access(input[0], X_OK) == -1)
@@ -52,20 +49,6 @@ void				cmd_exit(char **input)
 	ft_puterror("exit: Too much arguments.", "");
 }
 
-char				*ft_strtoup(char *str)
-{
-	int				i;
-
-	i = 0;
-	while (str[i])
-	{
-		if (str[i] >= 'a' && str[i] <= 'z')
-			str[i] -= 32;
-		i++;
-	}
-	return (str);
-}
-
 char				*replace(char *str)
 {
 	int				i;
@@ -91,4 +74,17 @@ char				**cut_str(char *input)
 		res[i] = ft_strtrim(res[i]);
 	}
 	return (res);
+}
+
+int					change_dir(char *path, char ***env)
+{
+	char			oldpwd[1024];
+
+	getcwd(oldpwd, sizeof(oldpwd));
+	if (chdir(path) == -1)
+		return (-1);
+	*env = cmd_setenv(*env, ft_strjoin("OLDPWD=", oldpwd));
+	getcwd(oldpwd, sizeof(oldpwd));
+	*env = cmd_setenv(*env, ft_strjoin("PWD=", oldpwd));
+	return (1);
 }

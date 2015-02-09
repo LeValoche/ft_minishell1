@@ -19,9 +19,8 @@ void				cmd_cd(char **input, char **env)
 	getcwd(oldpwd, sizeof(oldpwd));
 	if (!input[1])
 	{
-		if (chdir(get_env_var(env, "HOME")) == -1)
+		if (change_dir(get_env_var(env, "HOME"), &env) == -1)
 			ft_puterror("cd: Don't find home directory.", "");
-		cmd_setenv(env, ft_strjoin("OLDPWD=", oldpwd));
 		return ;
 	}
 	if (input[1][0] == '~')
@@ -31,12 +30,12 @@ void				cmd_cd(char **input, char **env)
 		cmd_setenv(env, ft_strjoin("OLDPWD=", oldpwd));
 	}
 	if (ft_strequ(input[1], "-"))
-		chdir(get_env_var(env, "OLDPWD"));
+		change_dir(get_env_var(env, "OLDPWD"), &env);
 	else if (access(input[1], F_OK) == -1)
 		ft_puterror("cd: No such file or directory: ", input[1]);
 	else if (access(input[1], X_OK) == -1)
 		ft_puterror("cd: Permission denied: ", input[1]);
-	else if (chdir(input[1]) == -1)
+	else if (change_dir(input[1], &env) == -1)
 		ft_puterror("cd: Don't work: ", input[1]);
 }
 

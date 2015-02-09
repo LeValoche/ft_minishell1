@@ -12,9 +12,9 @@
 
 #include "ft_sh1.h"
 
-char		*slash(char *str)
+char				*slash(char *str)
 {
-	int		i;
+	int				i;
 
 	i = -1;
 	while (str[++i])
@@ -24,13 +24,13 @@ char		*slash(char *str)
 	return (str);
 }
 
-char		*get_home(char **env)
+char				*get_home(char **env)
 {
 	(void)env;
 	return (NULL);
 }
 
-char		*get_env_var(char **env, char *var)
+char				*get_env_var(char **env, char *var)
 {
 	while (*env)
 	{
@@ -41,9 +41,9 @@ char		*get_env_var(char **env, char *var)
 	return (NULL);
 }
 
-char		*get_envar(char *env)
+char				*get_envar(char *env)
 {
-	int		i;
+	int				i;
 
 	i = -1;
 	if (!env)
@@ -51,4 +51,18 @@ char		*get_envar(char *env)
 	while (env[++i] && env[i] != '=')
 		;
 	return (ft_strsub(env, 0, i));
+}
+
+char				*ft_strtoup(char *str)
+{
+	int				i;
+
+	i = 0;
+	while (str[i])
+	{
+		if (str[i] >= 'a' && str[i] <= 'z')
+			str[i] -= 32;
+		i++;
+	}
+	return (str);
 }

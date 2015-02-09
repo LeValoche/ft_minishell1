@@ -54,5 +54,6 @@ char				*ft_strtoup(char *str);
 char				*replace(char *str);
 char				**cut_str(char *input);
 int					unvalid_entry(char *str);
+int					change_dir(char *path, char ***env);
 
 #endif

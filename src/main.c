@@ -14,9 +14,7 @@
 
 int				check_entry(char *input)
 {
-	ft_putendl(input);
-	FAIRE MARCHER LE ./
-	if (!ft_isalpha(input[0]) && !ft_strchr(input, '/'))
+	if (!ft_isalpha(input[0]) && !ft_strrchr(input, '/'))
 		return (0);
 	else if (ft_strlen(input) > 1024)
 		ft_puterror("ft_minishell1: Input so fat.", "");
@@ -41,7 +39,7 @@ char			**what_to_do(char **split, char **env)
 		cmd_env(env);
 	else if (ft_strequ(split[0], "exit"))
 		cmd_exit(split);
-	else if (ft_strchr(split[0], '/'))
+	else if (ft_strrchr(split[0], '/'))
 		cmd_exec(split, env);
 	else
 		cmd_div(split, env);
@@ -66,7 +64,10 @@ void			ft_prompt(int e)
 	ft_putstr(COLOR_RESET);
 	ft_putchar('[');
 	ft_putstr(BLUE);
-	ft_putstr(ft_strrchr(buf, '/') + 1);
+	if (ft_strequ(buf, "/"))
+		ft_putstr("/");
+	else
+		ft_putstr(ft_strrchr(buf, '/') + 1);
 	ft_putstr(COLOR_RESET);
 	ft_putstr("] ");
 	error = 0;
@@ -101,6 +102,11 @@ int				main(int ac, char **av, char **env)
 	{
 		ft_prompt(0);
 		get_next_line(0, &input);
+		if (!input)
+		{
+			ft_putendl("");
+			continue ;
+		}
 		if (unvalid_entry(input))
 			ft_putstr("");
 		else if (check_entry(ft_strtrim(input)))
