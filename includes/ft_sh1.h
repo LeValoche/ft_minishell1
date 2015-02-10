@@ -34,7 +34,7 @@ char				**what_to_do(char **split, char **env);
 void				cmd_cd(char **input, char **env);
 char				**cmd_setenv(char **env, char *input);
 char				**cmd_unsetenv(char **env, char **input);
-void				cmd_env(char **env);
+void				cmd_env(char **env, char **split);
 void				cmd_div(char **input, char **env);
 void				cmd_exit(char **input);
 char				*slash(char *str);

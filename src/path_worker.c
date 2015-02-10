@@ -32,9 +32,11 @@ char				*get_home(char **env)
 
 char				*get_env_var(char **env, char *var)
 {
+	if (!env)
+		return (NULL);
 	while (*env)
 	{
-		if (!ft_strncmp(*env, var, ft_strlen(var) - 1))
+		if (ft_strnequ(*env, var, ft_strlen(var) - 1))
 			return (*env + ft_strlen(var) + 1);
 		env++;
 	}

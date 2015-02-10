@@ -71,10 +71,15 @@ char				**cmd_unsetenv(char **env, char **input)
 	return (ft_delrow(env, ft_strtoup(input[1])));
 }
 
-void				cmd_env(char **env)
+void				cmd_env(char **env, char **split)
 {
-	while (*env)
-		ft_putendl(*env++);
+	if (split[1])
+		cmd_div(split + 1, NULL);
+	else
+	{
+		while (*env)
+			ft_putendl(*env++);
+	}
 }
 
 void				cmd_div(char **input, char **env)

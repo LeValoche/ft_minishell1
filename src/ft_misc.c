@@ -46,7 +46,7 @@ void				cmd_exit(char **input)
 		exit(0);
 	if (i == 2)
 		exit(ft_atoi(input[1]));
-	ft_puterror("exit: Too much arguments.", "");
+	ft_puterror("exit: Too many arguments.", "");
 }
 
 char				*replace(char *str)
