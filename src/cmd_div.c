@@ -71,15 +71,22 @@ char				**cmd_unsetenv(char **env, char **input)
 	return (ft_delrow(env, ft_strtoup(input[1])));
 }
 
-void				cmd_env(char **env, char **split)
+char				**cmd_env(char **env, char **split)
 {
-	if (split[1])
-		cmd_div(split + 1, NULL);
-	else
+	int				i;
+
+	i = -1;
+	while (split[++i])
+		;
+	if (i == 1)
 	{
-		while (*env)
-			ft_putendl(*env++);
+		i = -1;
+		while (env[++i])
+			ft_putendl(env[i]);
 	}
+	else
+		cmd_env_div(split + 1, env);
+	return (env);
 }
 
 void				cmd_div(char **input, char **env)
@@ -88,9 +95,7 @@ void				cmd_div(char **input, char **env)
 	char			*save;
 	int				i;
 
-	if (get_env_var(env, "PATH"))
-		pid = fork();
-	else
+	if (!get_env_var(env, "PATH"))
 	{
 		ft_puterror("ft_minishell1: Command not found: ", input[0]);
 		return ;
@@ -98,19 +103,17 @@ void				cmd_div(char **input, char **env)
 	paths = ft_strsplit(get_env_var(env, "PATH"), ':');
 	i = -1;
 	save = ft_strdup(input[0]);
-	input[0] = ft_strjoin(slash(paths[0]), input[0]);
-	if (pid == 0)
+	g_pid = fork();
+	if (g_pid == 0)
 	{
 		while (paths[++i] && execve(ft_strjoin(slash(paths[i]), save),
 			input, env) == -1)
-			input[0] = ft_strjoin(slash(paths[i]), save);
+			;
 		if (!paths[i])
 			ft_puterror("ft_minishell1: Command not found: ", save);
 		exit(0);
 	}
 	else
-	{
-		if (waitpid(pid, NULL, 0) == pid)
-			kill(pid, SIGUSR1);
-	}
+		waitpid(g_pid, NULL, 0);
+	kill(g_pid, SIGUSR1);
 }

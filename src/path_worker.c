@@ -24,12 +24,6 @@ char				*slash(char *str)
 	return (str);
 }
 
-char				*get_home(char **env)
-{
-	(void)env;
-	return (NULL);
-}
-
 char				*get_env_var(char **env, char *var)
 {
 	if (!env)

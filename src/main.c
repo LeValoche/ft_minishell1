@@ -36,7 +36,7 @@ char			**what_to_do(char **split, char **env)
 	else if (ft_strequ(split[0], "unsetenv"))
 		env = cmd_unsetenv(env, split);
 	else if (ft_strequ(split[0], "env"))
-		cmd_env(env, split);
+		env = cmd_env(env, split);
 	else if (ft_strequ(split[0], "exit"))
 		cmd_exit(split);
 	else if (ft_strrchr(split[0], '/'))

@@ -10,8 +10,8 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef FT_SH1
-# define FT_SH1
+#ifndef FT_SH1_H
+# define FT_SH1_H
 
 # include <unistd.h>
 # include <stdlib.h>
@@ -27,33 +27,32 @@
 # define CYAN    		"\x1b[36m"
 # define COLOR_RESET	"\x1b[0m"
 
-pid_t				pid;
+pid_t				g_pid;
 
+int					unvalid_entry(char *str);
+int					check_entry(char *input);
 char				*get_next_line(int fd, char **line);
 char				**what_to_do(char **split, char **env);
+char				**set_env(void);
 void				cmd_cd(char **input, char **env);
 char				**cmd_setenv(char **env, char *input);
 char				**cmd_unsetenv(char **env, char **input);
-void				cmd_env(char **env, char **split);
+char				**cmd_env(char **env, char **split);
+void				cmd_env_div(char **input, char **env);
 void				cmd_div(char **input, char **env);
 void				cmd_exit(char **input);
-char				*slash(char *str);
-void				cmd_pwd(void);
-char				*get_home(char **env);
+void				cmd_exec(char **input, char **env);
 char				*get_env_var(char **env, char *var);
-void				ft_prompt(int e);
-char				**set_env(void);
 char				*get_envar(char *env);
+char				*slash(char *str);
+void				ft_prompt(int e);
 int					ft_dbtablen(char **tab);
 char				**ft_addrow(char **tab, char *str);
 char				**ft_delrow(char **tab, char *str);
-int					check_entry(char *input);
-void				ft_puterror(char *s1, char *s2);
-void				cmd_exec(char **input, char **env);
 char				*ft_strtoup(char *str);
 char				*replace(char *str);
 char				**cut_str(char *input);
-int					unvalid_entry(char *str);
 int					change_dir(char *path, char ***env);
+void				ft_puterror(char *s1, char *s2);
 
 #endif
