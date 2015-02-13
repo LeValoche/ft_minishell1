@@ -52,8 +52,10 @@ char		**ft_delrow(char **tab, char *str)
 char		**ft_addrow(char **tab, char *str)
 {
 	char	**db;
+	char	*save;
 	int		i;
 
+	save = ft_strdup(tab[0]);
 	db = (char **)malloc(sizeof(char *) * ft_dbtablen(tab) + 2);
 	i = 0;
 	while (i < ft_dbtablen(tab))
@@ -62,7 +64,8 @@ char		**ft_addrow(char **tab, char *str)
 		i++;
 	}
 	db[i] = ft_strdup(str);
-	db[i + 1] = 0;
+	db[++i] = 0;
+	db[0] = ft_strdup(save);
 	return (db);
 }
 

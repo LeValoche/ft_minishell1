@@ -51,7 +51,7 @@ char				**cmd_setenv(char **env, char *input)
 	}
 	while (env[i])
 	{
-		if (!ft_strcmp(get_envar(env[i]), get_envar(input)))
+		if (ft_strequ(get_envar(env[i]), get_envar(input)))
 		{
 			env[i] = ft_strdup(input);
 			return (env);
@@ -71,7 +71,7 @@ char				**cmd_unsetenv(char **env, char **input)
 	return (ft_delrow(env, ft_strtoup(input[1])));
 }
 
-char				**cmd_env(char **env, char **split)
+void				cmd_env(char **env, char **split)
 {
 	int				i;
 
@@ -86,7 +86,6 @@ char				**cmd_env(char **env, char **split)
 	}
 	else
 		cmd_env_div(split + 1, env);
-	return (env);
 }
 
 void				cmd_div(char **input, char **env)

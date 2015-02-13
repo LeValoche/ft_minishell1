@@ -37,7 +37,7 @@ char				**set_env(void);
 void				cmd_cd(char **input, char **env);
 char				**cmd_setenv(char **env, char *input);
 char				**cmd_unsetenv(char **env, char **input);
-char				**cmd_env(char **env, char **split);
+void				cmd_env(char **env, char **split);
 void				cmd_env_div(char **input, char **env);
 void				cmd_div(char **input, char **env);
 void				cmd_exit(char **input);
